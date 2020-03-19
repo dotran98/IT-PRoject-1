@@ -1,0 +1,25 @@
+Meeting 1 - Mon 24 February 2020
+
+Open 1105
+
+Group Name:?
+
+Group Skills:
+- Tran: Python, Java, Databases
+- Andrew: Java, Python, good at learning programming languages, project management (JIRA)
+- Tate: Basics of programming, project management, client interaction, finicky processes
+- Bridget: C++, C#, Java, IT Project Development
+
+Roles:
+- Business Analyst - client focussed
+- System Analyst - processes and technology implementation
+- General Programmer - documentation
+- Project Manager - schedules
+
+Project Options:
+1. Teaching Support Team Information Management System (Dr Kate)
+2. LVC Integration for Unity (Dr Silva)
+3. Autonomous Monitoring System for Drones (Nour)
+4. Simulated Industrial Control System Hacking (Ben)
+
+Close 1135

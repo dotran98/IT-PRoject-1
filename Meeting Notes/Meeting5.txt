@@ -1,0 +1,23 @@
+Meeting 5 - Mon 16 March 2020
+
+Opened 1010
+
+Progress:
+- Completed Statement of Work
+	- Tate to send to Sura for feedback and signature
+	- Also to confirm preferred method of contact due to COVID-19
+
+Project Review 1: present on Mondays (meeting with Sura on Thursdays)
+- Tran and Andrew - continue Boids progress - possibly another algorithm?
+- Bridget and Tate - continue on VBS connection (minor issues to work through)
+NOTES on Review:
+- Wholistic approach - convince Erandi on the right track
+- introduction of project
+- requirements & assigned tasks
+- control measures, reporting and meetings
+
+Points of Concern:
+- Lab access during COVID-19 changes
+
+
+Closed 1100

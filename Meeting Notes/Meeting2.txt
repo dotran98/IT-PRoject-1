@@ -1,0 +1,34 @@
+Meeting 2 - Thur 27 February 2020
+
+Opened 1310
+
+Project Management Tools:
+- Jira
+- Zoho
+- OpenProject (initially chosen as a tester)
+
+Group Name: SOFTWARS
+
+Project Decided: LVC Integration with Unity
+
+Client Contact:
+- define the scope of the project and deliberate requirements
+- our skills (java focussed)
+- meeting time?
+
+Roles:
+- Tate: External liaison and client manager
+- Tran: Technical development leader
+- Bridget: Project manager and documention
+- Andrew: Co-developer and testing
+
+Internal Team Comms:
+- Main meeting in lectures - as required outside of hours
+- FB group chat
+- Deliberate and formal --> email
+
+Before next meeting:
+- Tate to email client
+- Individually familiarise ourselves with Unity and C# (FPS)
+
+Closed 1355

@@ -1,0 +1,19 @@
+Meeting 4 - Friday 13 March 2020
+
+Opened 1010
+
+Missed - Monday (public holiday) & Thursday (Guest lecture)
+
+Main Point:
+- Approve and submit Project Charter (due today!)
+
+Progress
+- Bridget has started Statement of Work
+- Tran and Andrew working on Boids Simulation
+- Waters downloaded OpenDis and starting on VBS connection
+
+Other Points:
+- Client Meeting notes confirmed and uploaded
+- JIRA documents and roadmap tasks updated
+
+Closed 1045
