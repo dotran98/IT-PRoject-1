@@ -1,0 +1,17 @@
+Meeting 6 - Thur 26 March 2020
+
+Opened 1030
+
+Project Review 1 Team Review: 
+- presented well
+- everyone was happy with contributions and flow of discussion
+
+Functional Specification - due Monday now (extension from Erandi)
+- possible issues with use cases due to nature of our project (not really requiring users)
+- google doc for everyone to edit and approve
+
+Main focus:
+- DIS Gateway and middleware
+However, Web Dev website is the main focus for all group members as that is a critical assessment piece due next week.
+
+Closed 1100
