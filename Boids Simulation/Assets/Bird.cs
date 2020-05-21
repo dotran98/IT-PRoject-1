@@ -2,21 +2,26 @@
 using System.Collections.Generic;
 using System.Net;
 using UnityEngine;
+using OpenDis.Dis1998;
+using OpenDis.Core;
+using OpenDis.Enumerations;
+using EspduSender;
 
 public class Bird : MonoBehaviour
 {
     public GameObject manager;
-
     public Vector2 location;
-
     public Vector2 velocity;
-
-    float detectDistance;
-
+    public Vector2 prev_location;
+    EntityStatePdu espdu;
+    public bool sendNewEspdu;
+    public float detectDistance;
+    public float threshold = 5.0f;          // The threshold of position change above which an Espdu is sent
     Vector2 goalPosition = Vector2.zero;
-
     Vector2 curForce;
 
+
+    // Start is called before the first frame update
     void Start()
     {
         this.velocity =
@@ -24,12 +29,28 @@ public class Bird : MonoBehaviour
         location =
             new Vector2(this.gameObject.transform.position.x,
                 this.gameObject.transform.position.y);
+        prev_location = this.location;                            // This will be reset if the DeadReckoning threshold is passed and the Espdu is sent
         detectDistance = 20.0f;
+
+        // Setting espdu's settings
+        espdu = new EntityStatePdu();
+        espdu.ExerciseID = 1;
+
+        // Setting EntityID settings for this Bird
+        EntityID eid = espdu.EntityID;
+        eid.Site = 0;
+        eid.Application = 1;
+        eid.Entity = 2;
+        EntityType entityType = espdu.EntityType;
+        entityType.EntityKind = 3;      // 3 means "lifeform" (as opposed to platform, environment etc)
+        entityType.Country = 13;        // These are Aussie birds ;)
+        entityType.Domain = 2;          // Air (vs land, surface, subsurface, space)
+        entityType.Category = 0;        // Other (it's a bird)
     }
 
     Vector2 seek(Vector2 target)
     {
-        return (target - location).normalized;
+        return (target - location);
     }
 
     void applyForce(Vector2 f)
@@ -41,7 +62,7 @@ public class Bird : MonoBehaviour
             force *= manager.GetComponent<Flock>().maxForce;
         }
 
-        this.GetComponent<Rigidbody2D>().AddForce(force, ForceMode2D.Force);
+        this.GetComponent<Rigidbody2D>().AddForce(force);
 
         if (
             this.GetComponent<Rigidbody2D>().velocity.magnitude >
@@ -58,7 +79,6 @@ public class Bird : MonoBehaviour
     Vector2 avoidObs()
     {
         Vector2 avoidForce = Vector2.zero;
-        Vector2 redirect = Vector2.zero;
         foreach (GameObject obs in manager.GetComponent<Flock>().obstacle)
         {
             Vector3 pos = this.transform.position;
@@ -68,23 +88,17 @@ public class Bird : MonoBehaviour
 
             if (dis <= this.detectDistance)
             {
-                Vector3 dir = obsPos - pos;
+                Vector3 dir = pos - obsPos;
                 Vector2 direction2D = new Vector2(dir.x, dir.y);
-                if (Vector2.Angle(this.velocity, direction2D) < 90)
-                {
-                    if (direction2D.x < 0)
-                        redirect = Vector2.Perpendicular(direction2D);
-                    else
-                        redirect = -Vector2.Perpendicular(direction2D);
+                Vector2 redirect = Vector2.Perpendicular(direction2D);
 
-                    if (dis <= 5)
-                    {
-                        avoidForce = redirect / dis * 50;
-                    }
-                    else
-                    {
-                        avoidForce = redirect / dis * 10;
-                    }
+                if (dis <= 5)
+                {
+                    avoidForce = redirect / dis * 20;
+                }
+                else if (dis <= 15)
+                {
+                    avoidForce = redirect / dis * 5;
                 }
             }
         }
@@ -109,10 +123,7 @@ public class Bird : MonoBehaviour
                 }
             }
         }
-        if (repulsiveForce.magnitude != 0)
-            return repulsiveForce.normalized;
-        else
-            return Vector2.zero;
+        return repulsiveForce;
     }
 
     Vector2 align()
@@ -139,10 +150,8 @@ public class Bird : MonoBehaviour
         if (count == 0)
             avg = Vector2.zero;
         else
-        {
             avg = (sum / count) - velocity;
-            avg = avg.normalized;
-        }
+
         return avg;
     }
 
@@ -183,7 +192,7 @@ public class Bird : MonoBehaviour
         Vector2 sep = separate();
         Vector2 avoid = avoidObs();
 
-        float[] w = { 1.0f, 1.0f, 1.5f, 1.0f };
+        float[] w = { 1.0f, 1.0f, 1.5f, 50.0f };
         curForce = w[0] * ali + w[1] * co + w[2] * sep + w[3] * avoid;
         if (manager.GetComponent<Flock>().seekGoal)
         {
@@ -206,35 +215,96 @@ public class Bird : MonoBehaviour
         if (this.location.x >= stageDimensions.x)
         {
             this.location = this.transform.position;
-            float new_x = -stageDimensions.x;
-            this.transform.position = new Vector3(new_x, -location.y, 0);
+            this.transform.position = new Vector3(-location.x, -location.y, 0);
         }
         if (this.location.x <= -stageDimensions.x)
         {
             this.location = this.transform.position;
-            float new_x = stageDimensions.x;
-            this.transform.position = new Vector3(new_x, -location.y, 0);
+            this.transform.position = new Vector3(-location.x, -location.y, 0);
         }
         if (this.location.y >= stageDimensions.y)
         {
             this.location = this.transform.position;
-            float new_y = -stageDimensions.y;
-            this.transform.position = new Vector3(-location.x, new_y, 0);
+            this.transform.position = new Vector3(-location.x, -location.y, 0);
         }
         if (this.location.y <= -stageDimensions.y)
         {
             this.location = this.transform.position;
-            float new_y = stageDimensions.y;
-            this.transform.position = new Vector3(-location.x, new_y, 0);
+            this.transform.position = new Vector3(-location.x, -location.y, 0);
         }
     }
 
     // Update is called once per frame
     void Update()
     {
-        goalPosition = manager.transform.position;
-
         flock();
+        transform.up = this.velocity;
+        goalPosition = manager.transform.position;
         stayInBorder();
+
+        this.GetComponent<Rigidbody2D>().rotation =
+            this.GetComponent<Rigidbody2D>().angularVelocity * Time.deltaTime;
+
+        if ((this.location.x - this.prev_location.x) > threshold)       // If position in x axis > threshold value, send Espdu
+        {
+            this.prev_location = this.location;
+            this.sendNewEspdu = true;
+        }
+        else if ((this.location.y - this.prev_location.y) > threshold)  // If position in y axis > threshold value, send Espdu
+        {
+            this.prev_location = this.location;
+            this.sendNewEspdu = true;
+        }
+        else
+        {
+            this.sendNewEspdu = false;
+        }
+
+        for (int i = 0; i < 1; i++)
+        {
+            // Declaring the position of the Bird (in WSP - World Space Position)
+            Vector3Double loc = espdu.EntityLocation;
+            loc.X = this.location.x;
+            loc.Y = this.location.y;
+            loc.Z = 0.0;
+
+            // Declaring the Bird's velocity
+            Vector3Float vel = espdu.EntityLinearVelocity;
+            vel.X = this.velocity.x;
+            vel.Y = this.velocity.y;
+            vel.Z = 0.0f;
+
+            // Declaring the DeadReckoning Algorithm to be used (R, P, W)
+            espdu.DeadReckoningParameters.DeadReckoningAlgorithm = (byte)2;
+
+            //// THIS IS IN TESTING PHASE --------------------------------------------------------------------
+
+            //// Setting the angular velocity of the Bird (as above)
+            //Vector3Float angvelo = new Vector3Float
+            //{
+            //    X = this.GetComponent<Rigidbody2D>().angularVelocity,
+            //    Y = 0.0f,
+            //    Z = 0.0f
+            //};
+            //espdu.DeadReckoningParameters.EntityAngularVelocity = angvelo;
+
+            //// END OF TESTING BLOCK ------------------------------------------------------------------------
+
+            if (this.sendNewEspdu)
+            {
+                espdu.Timestamp = DisTime.DisRelativeTimestamp;
+
+                // Prepare output
+                DataOutputStream dos = new DataOutputStream(Endian.Big);
+                espdu.MarshalAutoLengthSet(dos);
+
+                // Transmit broadcast messages
+                Sender.SendMessages(dos.ConvertToBytes());
+                string mess = string.Format("Message sent with TimeStamp [{0}] Time Of[{1}]", espdu.Timestamp, (espdu.Timestamp >> 1));
+                Debug.Log(mess);
+            }
+        }
     }
+
+    
 }

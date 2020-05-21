@@ -9,12 +9,12 @@ public class Bomb : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        bombPower = 1000.0f;
+        bombPower = 10000.0f;
     }
 
     void FixedUpdate()
     {
-        Object.Destroy(this.gameObject, 1.0f);
+        Object.Destroy(this.gameObject, 100.0f);
     }
 
     void OnTriggerEnter2D(Collider2D col)
@@ -27,9 +27,6 @@ public class Bomb : MonoBehaviour
         float dis = Vector3.Distance(bomb, target);
 
         force = force.normalized * bombPower / dis;
-        col
-            .gameObject
-            .GetComponent<Rigidbody2D>()
-            .AddForce(force, ForceMode2D.Impulse);
+        col.gameObject.GetComponent<Rigidbody2D>().AddForce(force);
     }
 }
