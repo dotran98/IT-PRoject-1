@@ -16,11 +16,8 @@ public class Flock : MonoBehaviour
 
     public bool seekGoal = true;
 
-    [Range(0, 2)]
-    public float maxForce = 0.5f;
-
     [Range(0, 100)]
-    public float maxVelo = 2.0f;
+    public float maxVelo = 5.0f;
 
     // Start is called before the first frame update
     void Start()

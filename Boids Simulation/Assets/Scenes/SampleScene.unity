@@ -1008,8 +1008,7 @@ MonoBehaviour:
     type: 3}
   numberOfBirds: 100
   seekGoal: 1
-  maxForce: 0.5
-  maxVelo: 10
+  maxVelo: 5
 --- !u!4 &1954542460
 Transform:
   m_ObjectHideFlags: 0
