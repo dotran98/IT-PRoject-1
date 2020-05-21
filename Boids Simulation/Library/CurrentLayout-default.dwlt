@@ -474,15 +474,25 @@ MonoBehaviour:
   m_LastFolders:
   - Assets
   m_LastFoldersGridSize: -1
+<<<<<<< HEAD
+  m_LastProjectPath: E:\IT-PRoject-1\Boids Simulation
+=======
   m_LastProjectPath: C:\Users\andre\Documents\UNSW 3rd Year\Semester 1\IT Project
     1\Boids Simulation
+>>>>>>> boids+openDis
   m_LockTracker:
     m_IsLocked: 0
   m_FolderTreeState:
     scrollPos: {x: 0, y: 0}
+<<<<<<< HEAD
+    m_SelectedIDs: 3e2e0000
+    m_LastClickedID: 11838
+    m_ExpandedIDs: 000000003a2f0000b6340000b8340000ba340000bc340000be340000c034000000ca9a3b
+=======
     m_SelectedIDs: 4a2d0000
     m_LastClickedID: 11594
     m_ExpandedIDs: 000000004a2d000066320000683200006a32000000ca9a3b
+>>>>>>> boids+openDis
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -510,7 +520,11 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: 
     m_LastClickedID: 0
+<<<<<<< HEAD
+    m_ExpandedIDs: 000000003a2f0000b6340000b8340000ba340000bc340000be340000c0340000
+=======
     m_ExpandedIDs: 000000004a2d000066320000683200006a320000
+>>>>>>> boids+openDis
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -633,7 +647,11 @@ MonoBehaviour:
   m_SceneHierarchy:
     m_TreeViewState:
       scrollPos: {x: 0, y: 0}
+<<<<<<< HEAD
+      m_SelectedIDs: 
+=======
       m_SelectedIDs: a82a0000
+>>>>>>> boids+openDis
       m_LastClickedID: 0
       m_ExpandedIDs: 6afbffff
       m_RenameOverlay:
@@ -695,9 +713,15 @@ MonoBehaviour:
   m_PlayAudio: 0
   m_AudioPlay: 0
   m_Position:
+<<<<<<< HEAD
+    m_Target: {x: -7.1501656, y: -23.351961, z: -2252.5405}
+    speed: 2
+    m_Value: {x: -7.1501656, y: -23.351961, z: -2252.5405}
+=======
     m_Target: {x: -1.564961, y: 1.0364937, z: -1046.3438}
     speed: 2
     m_Value: {x: -1.564961, y: 1.0364937, z: -1046.3438}
+>>>>>>> boids+openDis
   m_RenderMode: 0
   m_CameraMode:
     drawMode: 0
@@ -730,9 +754,15 @@ MonoBehaviour:
     speed: 2
     m_Value: {x: 0, y: 0, z: 0, w: 1}
   m_Size:
+<<<<<<< HEAD
+    m_Target: 114.95919
+    speed: 2
+    m_Value: 114.95919
+=======
     m_Target: 251.56825
     speed: 2
     m_Value: 251.56825
+>>>>>>> boids+openDis
   m_Ortho:
     m_Target: 1
     speed: 2

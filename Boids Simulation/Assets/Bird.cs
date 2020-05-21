@@ -12,25 +12,27 @@ public class Bird : MonoBehaviour
     public GameObject manager;
     public Vector2 location;
     public Vector2 velocity;
+
+    float detectDistance;
+
+    Vector3 goalPosition = Vector3.zero;
+
+    Vector2 added_velo;
     public Vector2 prev_location;
     EntityStatePdu espdu;
     public bool sendNewEspdu;
-    public float detectDistance;
     public float threshold = 5.0f;          // The threshold of position change above which an Espdu is sent
-    Vector2 goalPosition = Vector2.zero;
-    Vector2 curForce;
 
 
     // Start is called before the first frame update
     void Start()
     {
-        this.velocity =
-            new Vector2(Random.Range(3.0f, 5.0f), Random.Range(3.0f, 5.0f));
+        this.GetComponent<Rigidbody2D>().velocity = new Vector2(1, 1);
         location =
             new Vector2(this.gameObject.transform.position.x,
                 this.gameObject.transform.position.y);
+        detectDistance = 25.0f;
         prev_location = this.location;                            // This will be reset if the DeadReckoning threshold is passed and the Espdu is sent
-        detectDistance = 20.0f;
 
         // Setting espdu's settings
         espdu = new EntityStatePdu();
@@ -53,17 +55,43 @@ public class Bird : MonoBehaviour
         return (target - location);
     }
 
-    void applyForce(Vector2 f)
+    Vector2 rotate(Vector2 v, float degrees)
     {
-        Vector3 force = new Vector3(f.x, f.y, 0);
-        if (force.magnitude > manager.GetComponent<Flock>().maxForce)
+        float sin = Mathf.Sin(degrees * Mathf.Deg2Rad);
+        float cos = Mathf.Cos(degrees * Mathf.Deg2Rad);
+
+        float tx = v.x;
+        float ty = v.y;
+        v.x = (cos * tx) - (sin * ty);
+        v.y = (sin * tx) + (cos * ty);
+        return v;
+    }
+
+    void applyVelo(Vector2 added_velo)
+    {
+        Vector2 new_velo =
+            this.GetComponent<Rigidbody2D>().velocity + added_velo;
+        float angle = Vector2.Angle(new_velo, this.velocity);
+
+        if (angle > 5.0f)
         {
-            force = f.normalized;
-            force *= manager.GetComponent<Flock>().maxForce;
+            Vector2 dir = rotate(this.velocity, 5.0f).normalized;
+
+            if (Vector2.Angle(dir, new_velo) > angle)
+            {
+                dir = rotate(this.velocity, -5.0f).normalized;
+            }
+            float mag =
+                new_velo.magnitude *
+                this.velocity.magnitude *
+                Mathf.Sin(angle * Mathf.Deg2Rad) /
+                (
+                new_velo.magnitude * Mathf.Sin((angle - 5) * Mathf.Deg2Rad) +
+                this.velocity.magnitude * Mathf.Sin(5 * Mathf.Deg2Rad)
+                );
+
+            this.GetComponent<Rigidbody2D>().velocity = dir * mag;
         }
-
-        this.GetComponent<Rigidbody2D>().AddForce(force);
-
         if (
             this.GetComponent<Rigidbody2D>().velocity.magnitude >
             manager.GetComponent<Flock>().maxVelo
@@ -78,7 +106,8 @@ public class Bird : MonoBehaviour
 
     Vector2 avoidObs()
     {
-        Vector2 avoidForce = Vector2.zero;
+        Vector2 new_velo = Vector2.zero;
+        Vector2 redirect = Vector2.zero;
         foreach (GameObject obs in manager.GetComponent<Flock>().obstacle)
         {
             Vector3 pos = this.transform.position;
@@ -90,24 +119,44 @@ public class Bird : MonoBehaviour
             {
                 Vector3 dir = pos - obsPos;
                 Vector2 direction2D = new Vector2(dir.x, dir.y);
-                Vector2 redirect = Vector2.Perpendicular(direction2D);
+                float angle = Vector2.Angle(this.velocity, direction2D);
+
+                if (angle < 90)
+                {
+                    if (manager.GetComponent<Flock>().seekGoal)
+                    {
+                        Vector2 standard = goalPosition - obsPos;
+                        float det =
+                            standard.x * (-direction2D.y) -
+                            standard.y * (-direction2D.x);
+                        if (det < 0)
+                            redirect =
+                                -Vector2.Perpendicular(direction2D).normalized;
+                        else
+                            redirect =
+                                Vector2.Perpendicular(direction2D).normalized;
+                    }
+                    else
+                        redirect =
+                            Vector2.Perpendicular(direction2D).normalized;
+                }
 
                 if (dis <= 5)
                 {
-                    avoidForce = redirect / dis * 20;
+                    new_velo = redirect * 5;
                 }
-                else if (dis <= 15)
+                else
                 {
-                    avoidForce = redirect / dis * 5;
+                    new_velo = redirect * 2;
                 }
             }
         }
-        return avoidForce;
+        return new_velo;
     }
 
     Vector2 separate()
     {
-        Vector2 repulsiveForce = Vector2.zero;
+        Vector2 new_velo = Vector2.zero;
 
         foreach (GameObject i in manager.GetComponent<Flock>().birds)
         {
@@ -119,11 +168,14 @@ public class Bird : MonoBehaviour
 
                 if (isNeighbor)
                 {
-                    repulsiveForce += (this.location - pos) / distance;
+                    new_velo += (this.location - pos) / distance;
                 }
             }
         }
-        return repulsiveForce;
+        if (new_velo.magnitude != 0)
+            return new_velo.normalized;
+        else
+            return Vector2.zero;
     }
 
     Vector2 align()
@@ -151,8 +203,8 @@ public class Bird : MonoBehaviour
             avg = Vector2.zero;
         else
             avg = (sum / count) - velocity;
-
-        return avg;
+        }
+        return avg.normalized;
     }
 
     Vector2 cohesion()
@@ -192,15 +244,15 @@ public class Bird : MonoBehaviour
         Vector2 sep = separate();
         Vector2 avoid = avoidObs();
 
-        float[] w = { 1.0f, 1.0f, 1.5f, 50.0f };
-        curForce = w[0] * ali + w[1] * co + w[2] * sep + w[3] * avoid;
+        float[] w = { 1.0f, 1.5f, 2.0f, 1.0f };
+        added_velo = w[0] * ali + w[1] * co + w[2] * sep + w[3] * avoid;
         if (manager.GetComponent<Flock>().seekGoal)
         {
             Vector2 goal = seek(goalPosition);
-            curForce += goal;
+            added_velo += goal;
         }
 
-        applyForce (curForce);
+        applyVelo (added_velo);
     }
 
     void stayInBorder()
@@ -237,6 +289,15 @@ public class Bird : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        goalPosition = manager.transform.position;
+        transform.up = this.velocity;
+
+        if (this.velocity.magnitude == 0)
+        {
+            this.GetComponent<Rigidbody2D>().velocity =
+                new Vector2(Random.Range(-5f, 5f), Random.Range(-5f, 5f));
+        }
+
         flock();
         transform.up = this.velocity;
         goalPosition = manager.transform.position;

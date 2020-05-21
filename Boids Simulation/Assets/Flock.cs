@@ -1,28 +1,30 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
-using OpenDis.Dis1998;
-using OpenDis.Core;
-using EspduSender;
-using OpenDis.Enumerations;
 using System.Net;
+using EspduSender;
+using OpenDis.Core;
+using OpenDis.Dis1998;
+using OpenDis.Enumerations;
+using UnityEngine;
 
 public class Flock : MonoBehaviour
 {
     public GameObject[] birds;
+
     public GameObject[] obstacle;
+
     public GameObject Bird;
+
     public GameObject explosionEffect;
+
     public int numberOfBirds;
+
     public bool seekGoal = true;
+
     public Sender sender;
 
-
-    [Range(0, 2)]
-    public float maxForce = 0.5f;
-
     [Range(0, 100)]
-    public float maxVelo = 2.0f;
+    public float maxVelo = 5.0f;
 
     // Start is called before the first frame update
     void Start()
@@ -49,10 +51,11 @@ public class Flock : MonoBehaviour
         }
 
         // Setting the Espdu sender's variables
-        Sender sender = new Sender(IPAddress.Parse("192.168.1.117"), 62040, 62040);        // Configure to target IP address/ports
+        Sender sender =
+            new Sender(IPAddress.Parse("192.168.1.117"), 62040, 62040); // Configure to target IP address/ports
         Sender.StartBroadcast();
     }
-    
+
     // Is called once per frame; deals with if a bomb is placed in the map
     void Update()
     {
@@ -67,5 +70,4 @@ public class Flock : MonoBehaviour
             Instantiate(explosionEffect, bombCentre, Quaternion.identity);
         }
     }
-
 }

@@ -1009,9 +1009,13 @@ MonoBehaviour:
   numberOfBirds: 100
   range: {x: 120, y: 70, z: 0}
   seekGoal: 1
+<<<<<<< HEAD
+  maxVelo: 5
+=======
   obedient: 1
   maxForce: 0.5
   maxVelo: 10
+>>>>>>> boids+openDis
 --- !u!4 &1954542460
 Transform:
   m_ObjectHideFlags: 0
