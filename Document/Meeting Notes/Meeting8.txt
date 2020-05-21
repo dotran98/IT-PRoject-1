@@ -1,0 +1,11 @@
+- Next week, spend on intensive research on OpenDIS -> document findings, why things work/don't work (take to client meeting to show him what we found)
+
+- Change final presentation to wk 13 (from wk 14) on Jira and stuff
+
+- Not required to update the func spec, but it may be useful for us to make the OpenDIS functional requirements more granular (as we gain a better understanding of it)
+-> Also, Erandi suggested that some relationships between use cases in the use case diagram were not put in there. I am *not* shocked; I wrote that use case diagram very quickly and didn't include the <<includes>> and <<extends>> etc relations.
+
+- Tran has got a good idea of what to do with the OpenDIS middleware. The current idea that we discussed is that we will import EspduSender.cs as a library into the Unity project, and within BirdManager.cs we will have a "sender" object so that we can use the methods inside the EspduSender.cs script. This will allow us to broadcast packets to a particular network
+
+
+** Also, Daryl and Erandi seem willing to help us out if we get stuck again, but obviously would like us to try and work things out ourselves.

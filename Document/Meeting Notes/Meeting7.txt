@@ -1,0 +1,23 @@
+Meeting 7 - Mon 30 March 2020
+
+Opened 1100
+
+Since last meeting:
+- Functional Specification - submitted this morning, pdf made from google doc
+- Still waiting for Sura to reply with signed Statement of Work
+- Everyone main priority has been Web Dev subject
+- Next thing due for IT Project are individual personal reflections
+
+General Topics Discussed:
+- DIS gateway will continue as main focus > now majority of subjects have died down (over the break)
+	- KDIS instead of OpenDis (due to the lack of C# completeness in code)
+	- DISUnity - implemented as a Unity Project
+
+Andrew - openDIS C# -> only a bunch of small files, no executable to run etc.
+Tran - Boids are pretty much complete, will start looking at other behavioural algorithms
+
+Other Points:
+- Talked with Erandi and Daryl > main issue recognised as DIS middleware - focus for the majority of the group (Tate, Andrew and Bridget)
+- Send Erandi and Daryl an email over Orange Book if we would like a scheduled chat
+
+Closed 1200

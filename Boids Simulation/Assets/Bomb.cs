@@ -14,7 +14,7 @@ public class Bomb : MonoBehaviour
 
     void FixedUpdate()
     {
-        Object.Destroy(this.gameObject, 1.0f);
+        Object.Destroy(this.gameObject, 100.0f);
     }
 
     void OnTriggerEnter2D(Collider2D col)

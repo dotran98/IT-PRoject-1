@@ -1,1 +1,5 @@
+<<<<<<< HEAD
 ﻿{"cameraMode":{"drawMode":0,"name":"Shaded","section":"Shading Mode"},"sceneLighting":true,"audioPlay":false,"sceneViewState":{"showFog":true,"showMaterialUpdate":false,"showSkybox":true,"showFlares":true,"showImageEffects":true,"showParticleSystems":true},"in2DMode":true,"pivot":{"x":-7.150165557861328,"y":-23.351961135864259,"z":-2252.54052734375},"rotation":{"x":0.0,"y":0.0,"z":0.0,"w":1.0},"size":114.95919036865235,"orthographic":true}
+=======
+﻿{"cameraMode":{"drawMode":0,"name":"Shaded","section":"Shading Mode"},"sceneLighting":true,"audioPlay":false,"sceneViewState":{"showFog":true,"showMaterialUpdate":false,"showSkybox":true,"showFlares":true,"showImageEffects":true,"showParticleSystems":true},"in2DMode":true,"pivot":{"x":-1.5649609565734864,"y":1.0364936590194703,"z":-1046.34375},"rotation":{"x":0.0,"y":0.0,"z":0.0,"w":1.0},"size":251.56825256347657,"orthographic":true}
+>>>>>>> boids+openDis

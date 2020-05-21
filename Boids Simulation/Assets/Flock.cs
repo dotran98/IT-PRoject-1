@@ -1,5 +1,10 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Net;
+using EspduSender;
+using OpenDis.Core;
+using OpenDis.Dis1998;
+using OpenDis.Enumerations;
 using UnityEngine;
 
 public class Flock : MonoBehaviour
@@ -15,6 +20,8 @@ public class Flock : MonoBehaviour
     public int numberOfBirds;
 
     public bool seekGoal = true;
+
+    public Sender sender;
 
     [Range(0, 100)]
     public float maxVelo = 5.0f;
@@ -42,8 +49,14 @@ public class Flock : MonoBehaviour
             birds[i].name = "Bird " + i;
             birds[i].GetComponent<Bird>().manager = this.gameObject;
         }
+
+        // Setting the Espdu sender's variables
+        Sender sender =
+            new Sender(IPAddress.Parse("192.168.1.117"), 62040, 62040); // Configure to target IP address/ports
+        Sender.StartBroadcast();
     }
 
+    // Is called once per frame; deals with if a bomb is placed in the map
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.Mouse0))
