@@ -304,7 +304,6 @@ public class Bird : MonoBehaviour
         }
 
         flock();
-        transform.up = this.velocity;
         goalPosition = manager.transform.position;
         stayInBorder();
 
