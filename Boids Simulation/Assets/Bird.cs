@@ -57,7 +57,7 @@ public class Bird : MonoBehaviour
 
     Vector2 seek(Vector2 target)
     {
-        return (target - location);
+        return (target - location).normalized;
     }
 
     Vector2 rotate(Vector2 v, float degrees)
@@ -122,7 +122,7 @@ public class Bird : MonoBehaviour
 
             if (dis <= this.detectDistance)
             {
-                Vector3 dir = pos - obsPos;
+                Vector3 dir = obsPos - pos;
                 Vector2 direction2D = new Vector2(dir.x, dir.y);
                 float angle = Vector2.Angle(this.velocity, direction2D);
 
@@ -207,8 +207,9 @@ public class Bird : MonoBehaviour
         if (count == 0)
             avg = Vector2.zero;
         else
+        {
             avg = (sum / count) - velocity;
-
+        }
         return avg.normalized;
     }
 
@@ -272,22 +273,26 @@ public class Bird : MonoBehaviour
         if (this.location.x >= stageDimensions.x)
         {
             this.location = this.transform.position;
-            this.transform.position = new Vector3(-location.x, -location.y, 0);
+            float new_x = -stageDimensions.x;
+            this.transform.position = new Vector3(new_x, -location.y, 0);
         }
         if (this.location.x <= -stageDimensions.x)
         {
             this.location = this.transform.position;
-            this.transform.position = new Vector3(-location.x, -location.y, 0);
+            float new_x = stageDimensions.x;
+            this.transform.position = new Vector3(new_x, -location.y, 0);
         }
         if (this.location.y >= stageDimensions.y)
         {
             this.location = this.transform.position;
-            this.transform.position = new Vector3(-location.x, -location.y, 0);
+            float new_y = -stageDimensions.y;
+            this.transform.position = new Vector3(-location.x, new_y, 0);
         }
         if (this.location.y <= -stageDimensions.y)
         {
             this.location = this.transform.position;
-            this.transform.position = new Vector3(-location.x, -location.y, 0);
+            float new_y = stageDimensions.y;
+            this.transform.position = new Vector3(-location.x, new_y, 0);
         }
     }
 
