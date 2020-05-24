@@ -9,7 +9,7 @@ public class Bomb : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        bombPower = 600000.0f;
+        bombPower = 40000.0f;
     }
 
     void FixedUpdate()
@@ -27,6 +27,9 @@ public class Bomb : MonoBehaviour
         float dis = Vector3.Distance(bomb, target);
 
         force = force.normalized / dis * bombPower;
-        col.gameObject.GetComponent<Rigidbody2D>().AddForce(force);
+        col
+            .gameObject
+            .GetComponent<Rigidbody2D>()
+            .AddForce(force, ForceMode2D.Impulse);
     }
 }

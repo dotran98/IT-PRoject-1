@@ -15,6 +15,8 @@ public class Bird : MonoBehaviour
 
     public Vector2 velocity;
 
+    public Vector2 explosionForce;
+
     float detectDistance;
 
     Vector3 goalPosition = Vector3.zero;
@@ -37,6 +39,8 @@ public class Bird : MonoBehaviour
             new Vector2(this.gameObject.transform.position.x,
                 this.gameObject.transform.position.y);
         detectDistance = 25.0f;
+        explosionForce = Vector2.zero;
+
         prev_location = this.location; // This will be reset if the DeadReckoning threshold is passed and the Espdu is sent
 
         // Setting espdu's settings
