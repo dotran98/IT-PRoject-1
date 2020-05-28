@@ -36,7 +36,7 @@ public class Bird : MonoBehaviour
         location =
             new Vector2(this.gameObject.transform.position.x,
                 this.gameObject.transform.position.y);
-        detectDistance = 25.0f;
+        detectDistance = 5.0f;
 
         prev_location = this.location; // This will be reset if the DeadReckoning threshold is passed and the Espdu is sent
 

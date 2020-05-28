@@ -1007,8 +1007,7 @@ MonoBehaviour:
   explosionEffect: {fileID: 7496491604746764873, guid: 916e8cd68e7cb97498bc8adb22b2acd9,
     type: 3}
   numberOfBirds: 100
-  range: {x: 120, y: 70, z: 0}
-  seekGoal: 1
+  seekGoal: 0
   maxVelo: 5
 --- !u!4 &1954542460
 Transform:
