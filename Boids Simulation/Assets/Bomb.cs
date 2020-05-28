@@ -17,6 +17,7 @@ public class Bomb : MonoBehaviour
         Object.Destroy(this.gameObject, 1.0f);
     }
 
+    //When the collision is triggered, apply Force to any object the explosion collides with
     void OnTriggerEnter2D(Collider2D col)
     {
         Vector3 bomb = this.transform.position;

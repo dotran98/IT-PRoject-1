@@ -15,9 +15,7 @@ public class Bird : MonoBehaviour
 
     public Vector2 velocity;
 
-    public Vector2 explosionForce;
-
-    float detectDistance;
+    float detectDistance; //distance in which the bird can detect possible collision
 
     Vector3 goalPosition = Vector3.zero;
 
@@ -39,7 +37,6 @@ public class Bird : MonoBehaviour
             new Vector2(this.gameObject.transform.position.x,
                 this.gameObject.transform.position.y);
         detectDistance = 25.0f;
-        explosionForce = Vector2.zero;
 
         prev_location = this.location; // This will be reset if the DeadReckoning threshold is passed and the Espdu is sent
 
@@ -59,11 +56,13 @@ public class Bird : MonoBehaviour
         entityType.Category = 0; // Other (it's a bird)
     }
 
+    //Finds the direction to the target.
     Vector2 seek(Vector2 target)
     {
         return (target - location).normalized;
     }
 
+    //Rotates a vector in 2D world by a certain degree
     Vector2 rotate(Vector2 v, float degrees)
     {
         float sin = Mathf.Sin(degrees * Mathf.Deg2Rad);
@@ -76,6 +75,10 @@ public class Bird : MonoBehaviour
         return v;
     }
 
+    /*Ensures newly calculated velocity satisfy 2 conditions:
+        the new velocity's direction is 5 degrees different to the old one.
+        the new velocity's magnitude is less than the max velocity value.
+    */
     void applyVelo(Vector2 added_velo)
     {
         Vector2 new_velo =
@@ -101,6 +104,9 @@ public class Bird : MonoBehaviour
 
             this.GetComponent<Rigidbody2D>().velocity = dir * mag;
         }
+        else
+            this.GetComponent<Rigidbody2D>().velocity = new_velo;
+
         if (
             this.GetComponent<Rigidbody2D>().velocity.magnitude >
             manager.GetComponent<Flock>().maxVelo
@@ -113,6 +119,7 @@ public class Bird : MonoBehaviour
         }
     }
 
+    // Allows birds go around the obstacles.
     Vector2 avoidObs()
     {
         Vector2 new_velo = Vector2.zero;
@@ -132,6 +139,7 @@ public class Bird : MonoBehaviour
 
                 if (angle < 90)
                 {
+                    //Allows birds make minimal adjustment to its route to the goal
                     if (manager.GetComponent<Flock>().seekGoal)
                     {
                         Vector2 standard = goalPosition - obsPos;
@@ -163,6 +171,7 @@ public class Bird : MonoBehaviour
         return new_velo;
     }
 
+    //Separation rule
     Vector2 separate()
     {
         Vector2 new_velo = Vector2.zero;
@@ -187,6 +196,7 @@ public class Bird : MonoBehaviour
             return Vector2.zero;
     }
 
+    //Alignment rule
     Vector2 align()
     {
         float neighborDis = this.detectDistance;
@@ -217,6 +227,7 @@ public class Bird : MonoBehaviour
         return avg.normalized;
     }
 
+    //Cohesion rule
     Vector2 cohesion()
     {
         float neighborDis = this.detectDistance;
@@ -244,6 +255,7 @@ public class Bird : MonoBehaviour
         return sum;
     }
 
+    //Calculate all the boids rule and avoid Obstacles velocity
     void flock()
     {
         location = transform.position;
@@ -254,7 +266,7 @@ public class Bird : MonoBehaviour
         Vector2 sep = separate();
         Vector2 avoid = avoidObs();
 
-        float[] w = { 1.0f, 1.5f, 2.0f, 1.0f };
+        float[] w = { 1.0f, 1.0f, 1.5f, 1.0f };
         added_velo = w[0] * ali + w[1] * co + w[2] * sep + w[3] * avoid;
         if (manager.GetComponent<Flock>().seekGoal)
         {
@@ -265,6 +277,7 @@ public class Bird : MonoBehaviour
         applyVelo (added_velo);
     }
 
+    //All birds's movement is in the camera view
     void stayInBorder()
     {
         Vector3 stageDimensions =
