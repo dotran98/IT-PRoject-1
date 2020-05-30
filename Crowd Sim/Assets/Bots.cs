@@ -1,25 +1,26 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.AI;
+using EspduSender;
+using System.Net;
+
 
 public class Bots : MonoBehaviour
 {
     public NavMeshAgent[] bots;
     public NavMeshAgent Bot;
     public int numbots;
-
     public ParticleSystem explosionEffect;
+    public Sender sender;
 
     // Start is called before the first frame update
     void Start()
     {
-
         bots = new NavMeshAgent[numbots];
+
         for(int i = 0; i < numbots; i++)
         {
             Vector3 spawnPosition =
-                Random.insideUnitCircle * numbots * 0.9f;
+                UnityEngine.Random.insideUnitCircle * numbots * 0.9f;
             bots[i] =
                Instantiate(Bot, spawnPosition, Quaternion.identity) as
                NavMeshAgent;
@@ -47,5 +48,4 @@ public class Bots : MonoBehaviour
             }
         }
     }
-
 }
