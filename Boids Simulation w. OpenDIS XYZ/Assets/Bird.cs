@@ -21,6 +21,8 @@ public class Bird : MonoBehaviour
 
     Vector2 added_velo;
 
+    public int entityID;
+
     public Vector2 prev_location;
 
     EntityStatePdu espdu;
@@ -48,7 +50,7 @@ public class Bird : MonoBehaviour
         EntityID eid = espdu.EntityID;
         eid.Site = 0;
         eid.Application = 1;
-        eid.Entity = 2;
+        eid.Entity = (ushort) entityID;
         EntityType entityType = espdu.EntityType;
         entityType.EntityKind = 3; // 3 means "lifeform" (as opposed to platform, environment etc)
         entityType.Country = 13; // These are Aussie birds ;)

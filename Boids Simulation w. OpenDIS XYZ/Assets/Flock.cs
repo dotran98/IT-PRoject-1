@@ -48,6 +48,7 @@ public class Flock : MonoBehaviour
                 GameObject;
             birds[i].name = "Bird " + i;
             birds[i].GetComponent<Bird>().manager = this.gameObject;
+            birds[i].GetComponent<Bird>().entityID = (ushort) i;
         }
 
         // Setting the Espdu sender's variables
