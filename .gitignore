@@ -1,13 +1,17 @@
 # Ignore the following files
 # --------------------------
 #
-**/Library/*
-**/Temp/*
-*.csproj
-*.unityproj
-*.sln
-**/*.userprefs
-**/*.pidb
+
 **/logs
 *.log
 **/*.meta
+
+**/Library/*
+**/Temp/*
+**/*.csproj
+**/*.unityproj
+**/*.sln
+**/*.userprefs
+**/*.pidb
+
+!*.*.meta
