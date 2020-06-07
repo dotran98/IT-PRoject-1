@@ -13,5 +13,4 @@
 **/*.sln
 **/*.userprefs
 **/*.pidb
-
-!*.*.meta
+**/.vs/*
