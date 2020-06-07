@@ -1,4 +1,9 @@
-﻿using UnityEngine;
+﻿/**
+ * Main control for each individual NPC agent.
+ * All behaviours are established.
+ */
+
+using UnityEngine;
 using UnityEngine.AI;
 using OpenDis.Dis1998;
 using OpenDis.Core;
@@ -7,6 +12,7 @@ using System.Net;
 
 public class NPCMove : MonoBehaviour
 {
+    //all required variables defined
     public GameObject[] wps;
     public GameObject sp;
     public NavMeshAgent agent;
@@ -23,6 +29,7 @@ public class NPCMove : MonoBehaviour
     //use this for initialisation
     private void Start()
     {
+        //set the NPC agent and its destination
         agent = GetComponent<NavMeshAgent>();
         int d = UnityEngine.Random.Range(0, wps.Length);
         crossingMask = 1 << NavMesh.GetAreaFromName("Crossing");
@@ -56,27 +63,29 @@ public class NPCMove : MonoBehaviour
     //update is called once per frame
     private void Update()
     {
+        //if the agent is crossing a road, they can choose a random faster speed - to simulat a human running
         NavMeshHit hit;
         if(!agent.SamplePathPosition(NavMesh.AllAreas, 0.0f, out hit))
         {
             if ((hit.mask & crossingMask) != 0)
             {
                 int random = UnityEngine.Random.Range(8, 15);
-                agent.speed = random;
+                agent.speed = random; //run across roads
             }
             else
             {
-                agent.speed = 5;
+                agent.speed = 5; //walk around the paths
             }
         }
 
+        //if the agent is close to their waypoint, choose another at random
         if (agent.remainingDistance < 0.5)
         {
             int d = UnityEngine.Random.Range(0, wps.Length);
             agent.SetAreaCost(4, 20);
             agent.SetDestination(wps[d].transform.position);
-
         }
+        //change the acceleration if the agent is turning corners to help navigate
         else if (agent.hasPath)
         {
             agent.isStopped = false;
