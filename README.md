@@ -26,21 +26,35 @@ You will then need to load the simulations into Unity before doing anything else
 
 To actually see the espdus being sent, you will have to do a couple of things.
 
-Firstly, <config file info here>.
+For the Boids simulation, labelled "Boids Simulation w. OpenDIS XYZ", there exists a configuration (JSON) file to make this part easy. All you have to do is open up the Assets folder within the "Boids Simulation w. OpenDIS XYZ" parent folder and open up the file labelled Appsettings.json. Within this file, you should see the different configurable values that you will need to change.
 
-ALTERNATIVELY IF CONFIG IS IMPOSSIBLE:
+       "threshold": "5.0",
+       "localx": "0",
+       "localy": "0",
+       "localIPAddr": "IPAddress.any",         // Leave this line alone; It's a default and refers to the IP address format accepted
+       "IPAddr": "239.1.2.3",
+       "mcastPort": "62040",
+       "broadcastPort": "62040"
 
-Firstly, you will need to go into the simulation project of your choice and edit some of the code there. If you are in the Boids simulation project, you will need to go to the Assets folder and then open the Flock.cs script, preferably in Microsoft Visual Studio (a code editor that comes with Unity – we used the 2019 version). Or if you are in the Crowd Sim, again go to the Assets folder, and then open up the NPCMove.cs script in Microsoft Visual Studio. Now, both scripts will have a Start() function; go into this function and find the section containing the following code:
+The threshold value means the amount of distance (in Unity's units) that a Boids can travel before an Espdu update is sent.
+Localx and localy mean the X and Y coordinates, in latitude/longitude, of the origin - the top left hand corner - of the simulation's area (or "map").
+IPAddr holds the IP address that Espdu packets will be sent and read from.
+The mcastPort holds the local port that Espdu packets will be sent via multicast. The broadcastPort holds the same but for broadcast.
+
+Simply change the values to suit your needs and save and close the json file.
+
+For the Crowd simulation, there is no config file, but setting it up is still simple enough. Firstly, you will need to go into the Crowd Sim folder and prepare to edit some of the code there. From inside the Crowd Sim folder, go to the Assets folder, and then open up the NPCMove.cs script in Microsoft Visual Studio (a code editor that comes with Unity – we used the 2019 version). Now, this script will have a Start() function; go into this function and find the section containing the following code:
 
        sender = new Sender(IPAddress.Parse("255.255.255.0"), 62040, 62040);
        Sender.StartBroadcast();
 
-       * Note that inside of Flock.cs the first line actually says Sender sender = ... rather than just sender
+Now, replace the IP address listed inside this definition with the desired IP address to receive the packets, and similarly edit the two ports listed beside it. Note that the first port is for multicast and the second for broadcast. There will also be the (dead reckoning) threshold value for sending an Espdu here too, which you can play around with to find the optimal amount to send in a given frame without DOS-ing yourself.
 
-Now, replace the IP address listed inside this definition with the desired IP address to receive the packets, and similarly edit the two ports listed beside it. Note that the first port is for broadcast and the second for multicast. Save and exit the files. Now, the Sender is configured. The second step is to do the same thing but for EspduReceiver.cs, which can be found inside OpenDIS’s c-sharp-dis-6 folder on this path: open-dis-csharp\CsharpDis6\EspduReceiver. First you will have to open the OpenDis.sln file in Microsoft Visual Studio. Then, from within Visual Studio, open a new file and select EspduReceiver.cs. Go to the main method at the bottom of the file. Set the mcastAddress to your desired IP address (ensure it matches the Sender’s!) and also set the ports. Finally, you can save and exit the file. Now that everything is configured, you can begin running the receiver.
+       public float threshold = 2.0f;
 
-To run the receiver, again open OpenDis.sln in Microsoft Visual Studio. Now, open a new file called EspduReceiver.exe, found via the path: open-dis-csharp\CsharpDis6\EspduReceiver\obj\x86\Debug. Once open, you will have to run the file using Debug -> Start Without Debugging. This will cause an “error” to occur, but that doesn’t actually affect how it runs in any way. Now a terminal window should open up saying it is waiting to receive packets. If you run your simulation in Unity at the same time as the EspduReceiver.exe file is running, you will see packets being received in said window.
+Save and exit the files. Now, the simulation is configured. The second step is to do the same thing but for EspduReceiver.cs, which can be found inside OpenDIS’s c-sharp-dis-6 folder on this path: open-dis-csharp\CsharpDis6\EspduReceiver. First you will have to open the OpenDis.sln file in Microsoft Visual Studio. Then, from within Visual Studio, open a new file and select EspduReceiver.cs. Go to the main method at the bottom of the file. Set the mcastAddress to your desired IP address (ensure it matches the Sender’s!) and also set the ports. Finally, you can save and exit the file. Now that everything is configured, you can begin running the receiver.
 
+To run the receiver, again open OpenDis.sln in Microsoft Visual Studio. Now, open a new file called EspduReceiver.exe, found via the path: open-dis-csharp\CsharpDis6\EspduReceiver\obj\x86\Debug. Once open, you will have to run the file using Debug -> Start Without Debugging. This will cause an “error” to occur, but that doesn’t actually affect how it runs in any way. Now a terminal window should open up saying it is waiting to receive packets. If you run the Crowd simulation in Unity at the same time as the EspduReceiver.exe file is running, you will see packets being received in said window.
 
 Of course, you could try receiving these packets in numerous other ways, the most obvious probably being using Wireshark. The only reason we didn’t use Wireshark was that other applications in the network were causing Wireshark to be unable to read the packets from their destination port.
 
